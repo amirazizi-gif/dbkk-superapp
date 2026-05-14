@@ -13,6 +13,7 @@ const pageTitles: Record<Page, string> = {
   parking: "Smart Parking",
   icare: "iCare — Report & Aduan",
   eservices: "e-Services",
+  explore: "Jelajah KK",
   profile: "My Profile",
   notifications: "Notifications",
 };

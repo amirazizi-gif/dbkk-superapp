@@ -8,11 +8,11 @@ interface BottomNavProps {
 }
 
 const navItems = [
-  { id: "dashboard" as Page, label: "Home", icon: Home },
-  { id: "parking" as Page, label: "Parking", icon: Car },
-  { id: "icare" as Page, label: "iCare", icon: Heart },
+  { id: "dashboard" as Page, label: "Home",       icon: Home },
+  { id: "parking"   as Page, label: "Parking",    icon: Car },
+  { id: "icare"     as Page, label: "iCare",      icon: Heart },
   { id: "eservices" as Page, label: "e-Services", icon: FileText },
-  { id: "profile" as Page, label: "Profile", icon: User },
+  { id: "profile"   as Page, label: "Profil",     icon: User },
 ];
 
 export default function BottomNav({ currentPage, onNavigate }: BottomNavProps) {

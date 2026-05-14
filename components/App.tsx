@@ -7,10 +7,11 @@ import ICarePage from "./pages/ICarePage";
 import EServicesPage from "./pages/EServicesPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotificationsPage from "./pages/NotificationsPage";
+import ExplorePage from "@/components/pages/ExplorePage";
 import Header from "./layout/Header";
 import BottomNav from "./layout/BottomNav";
 
-export type Page = "dashboard" | "parking" | "icare" | "eservices" | "profile" | "notifications";
+export type Page = "dashboard" | "parking" | "icare" | "eservices" | "profile" | "notifications" | "explore";
 
 export interface User {
   name: string;
@@ -43,13 +44,14 @@ export default function App() {
 
   const renderPage = () => {
     switch (currentPage) {
-      case "dashboard": return <Dashboard user={user!} onNavigate={setCurrentPage} />;
-      case "parking": return <ParkingPage />;
-      case "icare": return <ICarePage />;
-      case "eservices": return <EServicesPage />;
-      case "profile": return <ProfilePage user={user!} onLogout={handleLogout} />;
+      case "dashboard":     return <Dashboard user={user!} onNavigate={setCurrentPage} />;
+      case "parking":       return <ParkingPage />;
+      case "icare":         return <ICarePage />;
+      case "eservices":     return <EServicesPage />;
+      case "explore":       return <ExplorePage />;
+      case "profile":       return <ProfilePage user={user!} onLogout={handleLogout} />;
       case "notifications": return <NotificationsPage />;
-      default: return <Dashboard user={user!} onNavigate={setCurrentPage} />;
+      default:              return <Dashboard user={user!} onNavigate={setCurrentPage} />;
     }
   };
 

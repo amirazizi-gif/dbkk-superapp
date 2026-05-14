@@ -1,14 +1,14 @@
 "use client";
 import { useState } from "react";
-import { Car, MapPin, Clock, CreditCard, QrCode, Plus, Minus, CheckCircle, AlertTriangle, Navigation, RefreshCw } from "lucide-react";
+import { CreditCard, QrCode, Plus, Minus, CheckCircle, AlertTriangle, Navigation } from "lucide-react";
 
 type ParkingView = "home" | "pay" | "compound" | "topup" | "success";
 
 const zones = [
-  { id: "A1", name: "Jalan Gaya", spots: 45, total: 60, rate: "RM 0.60/30min" },
-  { id: "A2", name: "Jalan Pantai", spots: 12, total: 80, rate: "RM 0.60/30min" },
-  { id: "B1", name: "Jalan Tuaran", spots: 31, total: 50, rate: "RM 0.40/30min" },
-  { id: "C1", name: "Warisan Square", spots: 8, total: 120, rate: "RM 1.00/30min" },
+  { id: "A1", name: "Jalan Gaya", rate: "RM 0.60/30min" },
+  { id: "A2", name: "Jalan Pantai", rate: "RM 0.60/30min" },
+  { id: "B1", name: "Jalan Tuaran", rate: "RM 0.40/30min" },
+  { id: "C1", name: "Warisan Square", rate: "RM 1.00/30min" },
 ];
 
 const compounds = [
@@ -19,13 +19,13 @@ const compounds = [
 export default function ParkingPage() {
   const [view, setView] = useState<ParkingView>("home");
   const [selectedZone, setSelectedZone] = useState(zones[0]);
-  const [duration, setDuration] = useState(2); // units of 30min
+  const [duration, setDuration] = useState(2);
   const [plate, setPlate] = useState("SAB 1234 A");
   const [payingCompound, setPayingCompound] = useState<typeof compounds[0] | null>(null);
   const [topupAmount, setTopupAmount] = useState(10);
   const [credit] = useState(12.50);
 
-  const cost = selectedZone ? (duration * 0.6) : 0;
+  const cost = duration * 0.6;
 
   if (view === "success") {
     return (
@@ -158,7 +158,7 @@ export default function ParkingPage() {
                 >
                   <div className="text-left">
                     <p className={`text-sm font-semibold ${selectedZone.id === z.id ? "text-blue-800" : "text-slate-800"}`}>{z.id} — {z.name}</p>
-                    <p className="text-xs text-slate-500">{z.rate} · {z.spots} lot tersedia</p>
+                    <p className="text-xs text-slate-500">{z.rate}</p>
                   </div>
                   {selectedZone.id === z.id && <CheckCircle size={18} className="text-blue-600" />}
                 </button>
@@ -181,15 +181,12 @@ export default function ParkingPage() {
             </div>
           </div>
         </div>
-
         <div className="bg-slate-50 rounded-2xl p-4 space-y-2 text-sm border border-slate-100">
           <div className="flex justify-between"><span className="text-slate-500">Kawasan</span><span className="font-medium">{selectedZone.name}</span></div>
           <div className="flex justify-between"><span className="text-slate-500">Tempoh</span><span className="font-medium">{duration * 30} minit</span></div>
-          <div className="flex justify-between"><span className="text-slate-500">Kadar</span><span className="font-medium">{selectedZone.rate}</span></div>
           <div className="flex justify-between border-t border-slate-200 pt-2 mt-2"><span className="font-semibold">Jumlah</span><span className="font-bold text-lg">RM {cost.toFixed(2)}</span></div>
           <div className="flex justify-between"><span className="text-slate-500">Baki (selepas)</span><span className={`font-semibold ${credit - cost < 0 ? "text-red-600" : "text-green-600"}`}>RM {(credit - cost).toFixed(2)}</span></div>
         </div>
-
         <button onClick={() => setView("success")} className="w-full gradient-hero text-white rounded-xl py-3.5 font-semibold">
           Bayar Parking — RM {cost.toFixed(2)}
         </button>
@@ -198,7 +195,7 @@ export default function ParkingPage() {
     );
   }
 
-  // Home view
+  // Home view — zones list removed, replaced with simple info card
   return (
     <div className="px-4 py-5 space-y-5">
       {/* Credit card */}
@@ -228,48 +225,55 @@ export default function ParkingPage() {
         ))}
       </div>
 
-      {/* Parking zones */}
-      <section>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-slate-900">Kawasan Berhampiran</h3>
-          <button className="text-blue-600 text-xs flex items-center gap-1"><RefreshCw size={12} /> Kemaskini</button>
-        </div>
+      {/* How to pay info card */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+        <p className="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3">Cara Bayar Parking</p>
         <div className="space-y-3">
-          {zones.map(z => {
-            const pct = ((z.total - z.spots) / z.total) * 100;
-            const statusColor = z.spots < 15 ? "text-red-600" : z.spots < 30 ? "text-amber-600" : "text-green-600";
-            return (
-              <div key={z.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">{z.id}</span>
-                      <p className="text-sm font-semibold text-slate-900">{z.name}</p>
-                    </div>
-                    <div className="flex items-center gap-1.5 mt-1">
-                      <MapPin size={12} className="text-slate-400" />
-                      <span className="text-xs text-slate-500">{z.rate}</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className={`text-lg font-bold ${statusColor}`}>{z.spots}</p>
-                    <p className="text-xs text-slate-400">lot kosong</p>
-                  </div>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-1.5 mt-2">
-                  <div className={`h-1.5 rounded-full ${pct > 80 ? "bg-red-500" : pct > 60 ? "bg-amber-500" : "bg-green-500"}`} style={{ width: `${pct}%` }} />
-                </div>
-                <div className="flex items-center justify-between mt-1">
-                  <span className="text-xs text-slate-400">{Math.round(pct)}% penuh</span>
-                  <button onClick={() => setView("pay")} className="text-xs font-semibold text-blue-600 flex items-center gap-1">
-                    <Navigation size={12} /> Bayar
-                  </button>
-                </div>
+          {[
+            { step: "1", label: "Tap \"Bayar Parking\"", desc: "Masukkan plat kenderaan & pilih kawasan" },
+            { step: "2", label: "Tetapkan tempoh", desc: "Pilih berapa lama anda akan parking" },
+            { step: "3", label: "Bayar dari kredit", desc: "Baki dipotong dari akaun Sabah Smart Parking anda" },
+            { step: "4", label: "Resit digital", desc: "Resit dihantar automatik — tiada slip kertas" },
+          ].map(({ step, label, desc }) => (
+            <div key={step} className="flex items-start gap-3">
+              <div className="w-7 h-7 rounded-full gradient-hero flex items-center justify-center shrink-0 mt-0.5">
+                <span className="text-white text-xs font-bold">{step}</span>
               </div>
-            );
-          })}
+              <div>
+                <p className="text-sm font-semibold text-slate-800">{label}</p>
+                <p className="text-xs text-slate-500">{desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
+
+      {/* Parking zones — text reference only, no live counts */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-bold text-slate-900 uppercase tracking-wide">Kawasan Parking DBKK</p>
+          <div className="flex items-center gap-1 text-xs text-slate-400">
+            <Navigation size={11} />
+            <span>Kota Kinabalu</span>
+          </div>
+        </div>
+        <div className="space-y-2">
+          {[
+            { id: "A1/A2", name: "Jalan Gaya & Jalan Pantai", rate: "RM 0.60 / 30 min" },
+            { id: "B1", name: "Jalan Tuaran", rate: "RM 0.40 / 30 min" },
+            { id: "C1", name: "Warisan Square", rate: "RM 1.00 / 30 min" },
+          ].map((z, i) => (
+            <div key={i} className="flex items-center justify-between py-2.5 border-b border-slate-50 last:border-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">{z.id}</span>
+                <span className="text-sm text-slate-700">{z.name}</span>
+              </div>
+              <span className="text-xs font-semibold text-slate-500">{z.rate}</span>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-slate-400 mt-3 italic">* Kadar semasa. Untuk info lanjut hubungi DBKK Holdings: 088-270 181</p>
+      </div>
     </div>
   );
 }

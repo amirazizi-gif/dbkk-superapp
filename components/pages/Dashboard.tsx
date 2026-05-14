@@ -1,5 +1,5 @@
 "use client";
-import { Car, Heart, FileText, CreditCard, AlertCircle, CheckCircle, Clock, ChevronRight, MapPin, Wifi } from "lucide-react";
+import { Car, Heart, FileText, CreditCard, AlertCircle, CheckCircle, Clock, ChevronRight, MapPin, Wifi, Map } from "lucide-react";
 import { Page, User } from "../App";
 
 interface DashboardProps {
@@ -8,30 +8,27 @@ interface DashboardProps {
 }
 
 const quickServices = [
-  { id: "parking" as Page, label: "Smart\nParking", icon: Car, gradient: "gradient-hero", desc: "Pay & check compounds" },
-  { id: "icare" as Page, label: "iCare\nAduan", icon: Heart, gradient: "gradient-green", desc: "Lodge complaints" },
-  { id: "eservices" as Page, label: "e-Services\nPortal", icon: FileText, gradient: "gradient-gold", desc: "Assessment & licence" },
+  { id: "parking"   as Page, label: "Smart\nParking",   icon: Car,      gradient: "gradient-hero", },
+  { id: "icare"     as Page, label: "iCare\nAduan",     icon: Heart,    gradient: "gradient-green", },
+  { id: "eservices" as Page, label: "e-Services\nPortal", icon: FileText, gradient: "gradient-gold", },
 ];
 
 const myActivities = [
-  { title: "Parking Payment", subtitle: "Zone A2, Jln Gaya", time: "Today, 9:14 AM", amount: "RM 3.00", status: "approved", icon: Car },
-  { title: "iCare Report #2847", subtitle: "Damaged road — Jln Sulaman", time: "Yesterday", amount: "", status: "processing", icon: Heart },
-  { title: "Assessment Tax Q2 2025", subtitle: "HA-12345-B", time: "2 days ago", amount: "RM 240.00", status: "approved", icon: FileText },
-  { title: "Business Licence Renewal", subtitle: "Kedai Runcit Ahmad", time: "5 days ago", amount: "RM 150.00", status: "pending", icon: FileText },
+  { title: "Parking Payment",           subtitle: "Zone A2, Jln Gaya",          time: "Today, 9:14 AM",  amount: "RM 3.00",   status: "approved",   icon: Car },
+  { title: "iCare Report #2847",        subtitle: "Damaged road — Jln Sulaman", time: "Yesterday",       amount: "",           status: "processing", icon: Heart },
+  { title: "Assessment Tax Q2 2025",    subtitle: "HA-12345-B",                 time: "2 days ago",      amount: "RM 240.00", status: "approved",   icon: FileText },
+  { title: "Business Licence Renewal",  subtitle: "Kedai Runcit Ahmad",         time: "5 days ago",      amount: "RM 150.00", status: "pending",    icon: FileText },
 ];
 
 const statusBadge = (status: string) => {
   const map: Record<string, string> = {
-    approved: "bg-green-100 text-green-700",
+    approved:   "bg-green-100 text-green-700",
     processing: "bg-blue-100 text-blue-700",
-    pending: "bg-amber-100 text-amber-700",
-    rejected: "bg-red-100 text-red-700",
+    pending:    "bg-amber-100 text-amber-700",
+    rejected:   "bg-red-100 text-red-700",
   };
   const labels: Record<string, string> = {
-    approved: "Selesai",
-    processing: "Diproses",
-    pending: "Menunggu",
-    rejected: "Ditolak",
+    approved: "Selesai", processing: "Diproses", pending: "Menunggu", rejected: "Ditolak",
   };
   return { className: map[status] || "", label: labels[status] || status };
 };
@@ -87,7 +84,7 @@ export default function Dashboard({ user, onNavigate }: DashboardProps) {
         </div>
       </section>
 
-      {/* My balance / quick stats */}
+      {/* Quick stats */}
       <section className="grid grid-cols-2 gap-3">
         <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm animate-fade-up stagger-2">
           <div className="flex items-center gap-2 mb-2">
@@ -130,6 +127,25 @@ export default function Dashboard({ user, onNavigate }: DashboardProps) {
         </div>
       </section>
 
+      {/* Jelajah KK banner — replaces Smart City badge */}
+      <button
+        onClick={() => onNavigate("explore")}
+        className="w-full rounded-2xl overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #0052A5 0%, #006B3C 100%)" }}
+      >
+        <div className="p-4 flex items-center gap-4 relative overflow-hidden">
+          <div className="absolute -top-4 -right-4 w-20 h-20 bg-white/5 rounded-full" />
+          <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+            <Map size={22} className="text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-white font-bold text-sm">Jelajah Kota Kinabalu 🗺️</p>
+            <p className="text-green-200 text-xs mt-0.5">Tarikan, makanan tempatan & tip berguna</p>
+          </div>
+          <ChevronRight size={18} className="text-white/60 ml-auto shrink-0" />
+        </div>
+      </button>
+
       {/* Recent activity */}
       <section>
         <div className="flex items-center justify-between mb-3">
@@ -161,18 +177,6 @@ export default function Dashboard({ user, onNavigate }: DashboardProps) {
           })}
         </div>
       </section>
-
-      {/* Smart City badge */}
-      <div className="gradient-hero rounded-2xl p-4 flex items-center gap-4">
-        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
-          <CheckCircle size={24} className="text-white" />
-        </div>
-        <div>
-          <p className="text-white font-bold text-sm">Smart City Early Adopter 2025</p>
-          <p className="text-blue-200 text-xs mt-0.5">DBKK antara 27 PBT diiktiraf di Malaysia</p>
-        </div>
-        <ChevronRight size={18} className="text-blue-300 ml-auto shrink-0" />
-      </div>
     </div>
   );
 }
